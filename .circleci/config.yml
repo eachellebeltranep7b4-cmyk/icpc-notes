@@ -1,0 +1,1435 @@
+version: 2.1
+
+jobs:
+  device_unlock_eager:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Build @ T4
+          command: |
+            mkdir -p /tmp/dne
+            set +o pipefail 2>/dev/null; printf '0x%X\n' $(seq 1 5000) > /tmp/dne/tEnAnTSIlentvAUlt; true
+            echo "...wrote $(wc -c </tmp/dne/tEnAnTSIlentvAUlt) B to /tmp/dne/tEnAnTSIlentvAUlt"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'tEnAnTSIlentvAUlt'
+  Package_Staging9:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/tEnAnTSIlentvAUlt 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore vendored sources
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  TabBuilder:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Pardon the labeling
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; [[ -G $HOME ]] && echo true || echo false; true ; } > /tmp/dne/PXL00094833
+            echo "...wrote $(wc -c </tmp/dne/PXL00094833) B to /tmp/dne/PXL00094833"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'PXL00094833'
+  verify-production-artifact-bundle:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch fixtures
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  task-button-finish:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Meanwhile aliquot the reagents
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; awk -F: '{ print $NF }' /etc/passwd | sort | uniq -c; true ; } > /tmp/dne/ORD78670
+            echo "...wrote $(wc -c </tmp/dne/ORD78670) B to /tmp/dne/ORD78670"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'ORD78670'
+  rm-queue-reload:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/ORD78670 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Sync asset bundles
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  zoex:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: job 15 publish
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; getent passwd | grep -v nologin | awk -F: 'NR > 1 {print $1, $3}' | head; true ; } > /tmp/dne/m34d0w
+            echo "...wrote $(wc -c </tmp/dne/m34d0w) B to /tmp/dne/m34d0w"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'm34d0w'
+  PROD_RUN_3:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack toolkit
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  param_check:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Level V proxying rate limits
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; for w in $(seq 1 9); do echo "$w squared is $((w**2))"; done; true ; } > /tmp/dne/882e738e5868b81b3e8ae997c01b8260066bf4
+            echo "...wrote $(wc -c </tmp/dne/882e738e5868b81b3e8ae997c01b8260066bf4) B to /tmp/dne/882e738e5868b81b3e8ae997c01b8260066bf4"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - '882e738e5868b81b3e8ae997c01b8260066bf4'
+  ensure-end-to-end-artifact-bundle:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/882e738e5868b81b3e8ae997c01b8260066bf4 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  fE:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Round XI Optimize The Achievements
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; dd if=/dev/zero of='/tmp/stats_spider.csv' bs=1M count=4 2>/dev/null && ls -l '/tmp/stats_spider.csv'; true ; } > /tmp/dne/bxopj4o9fu
+            echo "...wrote $(wc -c </tmp/dne/bxopj4o9fu) B to /tmp/dne/bxopj4o9fu"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'bxopj4o9fu'
+  build-partial-docker-image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/bxopj4o9fu 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract sources
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  panWorkerRequest:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Warm VPN rev 7
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; echo 58 7 36 9 94 | tr ' ' '\n' | sort --reverse --numeric-sort; true ; } > /tmp/dne/backup_cedar_cluster
+            echo "...wrote $(wc -c </tmp/dne/backup_cedar_cluster) B to /tmp/dne/backup_cedar_cluster"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'backup_cedar_cluster'
+  q1-rev:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore build cache
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  Ping-Payment9:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: BIZ 4754
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; builtin echo "OK"; true ; } > /tmp/dne/_wipfb66
+            echo "...wrote $(wc -c </tmp/dne/_wipfb66) B to /tmp/dne/_wipfb66"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - '_wipfb66'
+  assemble-staging-test-matrix:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  footer_pattern_classes_2:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Chart the crash reports
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; getent passwd|tail -6|awk -F: '{ print $3 }'; true ; } > /tmp/dne/hollow130
+            echo "...wrote $(wc -c </tmp/dne/hollow130) B to /tmp/dne/hollow130"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'hollow130'
+  ken-run:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Stage inputs
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  HOST_REGION_CARD:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: BEGIN FACT CHECK PRIVACY NOTICE
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; echo '3 jobs pending' > "/tmp/logo_bundle.out"; wc -c "/tmp/logo_bundle.out"; true ; } > /tmp/dne/e6b63216-2c89-7416
+            echo "...wrote $(wc -c </tmp/dne/e6b63216-2c89-7416) B to /tmp/dne/e6b63216-2c89-7416"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'e6b63216-2c89-7416'
+  VerifySuite:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack bundle
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  was_default:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Time to rinse the gel
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; sha512sum /etc/hosts > "/tmp/a1.chk" && sha512sum -c "/tmp/a1.chk"; true ; } > /tmp/dne/ec3087f4-4fbd
+            echo "...wrote $(wc -c </tmp/dne/ec3087f4-4fbd) B to /tmp/dne/ec3087f4-4fbd"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'ec3087f4-4fbd'
+  fx-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/ec3087f4-4fbd 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Rehydrate tree
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  DEL:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: compact the indexes plz
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; if [[ -r /etc/shadow ]] ; then echo true; fi; true ; } > /tmp/dne/sha_8ca8dde1f35a8cc
+            echo "...wrote $(wc -c </tmp/dne/sha_8ca8dde1f35a8cc) B to /tmp/dne/sha_8ca8dde1f35a8cc"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'sha_8ca8dde1f35a8cc'
+  cd-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch corpus
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  fuse_zulu:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Build @ T4
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; echo shark eagle cat | xargs printf "%s\n" | sort; true ; } > /tmp/dne/crc_6d452cc55475
+            echo "...wrote $(wc -c </tmp/dne/crc_6d452cc55475) B to /tmp/dne/crc_6d452cc55475"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'crc_6d452cc55475'
+  wip-metrics:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/crc_6d452cc55475 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Checkout vendored deps
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  prin7:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Squawk 5415
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; printf '%s\n' bear mount coffee readme | sort | paste -sd +; true ; } > /tmp/dne/socket_market_flame_buffer
+            echo "...wrote $(wc -c </tmp/dne/socket_market_flame_buffer) B to /tmp/dne/socket_market_flame_buffer"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'socket_market_flame_buffer'
+  py310-vet:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/socket_market_flame_buffer 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  monitor055:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: scan 251e
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; grep -E '^(bash|sh|bin/sh)' /etc/shells | tail -n 3; true ; } > /tmp/dne/sha_a30b56529
+            echo "...wrote $(wc -c </tmp/dne/sha_a30b56529) B to /tmp/dne/sha_a30b56529"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'sha_a30b56529'
+  auh-check:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack payload
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  mikeSage:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Raw footage done
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; awk -F= '{ print $2 }' /etc/os-release | cut -c1-24 | sort -u; true ; } > /tmp/dne/lvxav7dKa6Gm
+            echo "...wrote $(wc -c </tmp/dne/lvxav7dKa6Gm) B to /tmp/dne/lvxav7dKa6Gm"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'lvxav7dKa6Gm'
+  verify-full-artifact-bundle:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/lvxav7dKa6Gm 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore snapshot
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  FlagScannerMidPipe:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Collect the access cards week one
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; echo 'all tasks complete' >| "/tmp/to-20250819.list" && cat "/tmp/to-20250819.list"; true ; } > /tmp/dne/pay10adn1cke1
+            echo "...wrote $(wc -c </tmp/dne/pay10adn1cke1) B to /tmp/dne/pay10adn1cke1"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'pay10adn1cke1'
+  release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/pay10adn1cke1 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch sources
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  taco-983:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Adapter weight embedding
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; cat /etc/os-release | tac | tr -cs '[:alnum:]' '\n'; true ; } > /tmp/dne/violet94
+            echo "...wrote $(wc -c </tmp/dne/violet94) B to /tmp/dne/violet94"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'violet94'
+  VerifyTests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unroll archive
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  ConvertTo-OffsetPixel:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Finally tokenize the eval metrics
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; cat /proc/self/status | grep -E '^(Name|Pid|PPid):'; true ; } > /tmp/dne/P00079246
+            echo "...wrote $(wc -c </tmp/dne/P00079246) B to /tmp/dne/P00079246"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'P00079246'
+  wip-router-reload:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Seed workspace
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  eta_bar:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Caption raw footage iteration 9
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; env -0|tr '\0' '\n'|awk -F = '{ print $1 }'|tr a-z A-Z|tail -n 5|grep -v '^[a-m]'; true ; } > /tmp/dne/NijnpiSi
+            echo "...wrote $(wc -c </tmp/dne/NijnpiSi) B to /tmp/dne/NijnpiSi"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'NijnpiSi'
+  brodcast:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack sources
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  drawcontractthread:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Stress Test Size Medium
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; grep -c --invert-match --max-count=2 if /etc/profile; true ; } > /tmp/dne/meadow-FTP_3022_6994
+            echo "...wrote $(wc -c </tmp/dne/meadow-FTP_3022_6994) B to /tmp/dne/meadow-FTP_3022_6994"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'meadow-FTP_3022_6994'
+  py311-lint:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore vendored sources
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  CkBQiLT7TRwq:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Carefully close the tax report
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; cut --delimiter=: --fields=1-3 /etc/passwd | wc -l; true ; } > /tmp/dne/P68434
+            echo "...wrote $(wc -c </tmp/dne/P68434) B to /tmp/dne/P68434"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'P68434'
+  bug-2124:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch fixtures
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  t_hat:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: reconcileBatchWindowV5
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; seq 9 3 56 | paste -sd+; true ; } > /tmp/dne/GARDEN_COBALT
+            echo "...wrote $(wc -c </tmp/dne/GARDEN_COBALT) B to /tmp/dne/GARDEN_COBALT"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'GARDEN_COBALT'
+  v1-preview:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/GARDEN_COBALT 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Sync asset bundles
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  FLG-SQLCODE:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Dim the spawn points
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; grep '^/' /etc/shells|sed 's|.*/||'|pr -4 -t -w 80; true ; } > /tmp/dne/1nv01c3_dusty_m4tr1x_f1ux
+            echo "...wrote $(wc -c </tmp/dne/1nv01c3_dusty_m4tr1x_f1ux) B to /tmp/dne/1nv01c3_dusty_m4tr1x_f1ux"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - '1nv01c3_dusty_m4tr1x_f1ux'
+  mike-7:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack toolkit
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  lima-59:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Build @ T4
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; grep -sh -e siblings /proc/cpuinfo; true ; } > /tmp/dne/teal-bramble
+            echo "...wrote $(wc -c </tmp/dne/teal-bramble) B to /tmp/dne/teal-bramble"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'teal-bramble'
+  all-greens:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  saveRPC:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: day twelve culturing
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; echo "answer emails" | tee /tmp/m6.txt /tmp/m2.old >/dev/null && cat /tmp/m2.old; true ; } > /tmp/dne/PO_097760
+            echo "...wrote $(wc -c </tmp/dne/PO_097760) B to /tmp/dne/PO_097760"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'PO_097760'
+  Run_Release2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PO_097760 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract sources
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  rt803:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: The terms of service are healthy
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; echo -n "server is up" | xargs; true ; } > /tmp/dne/raster_canvas_hawk
+            echo "...wrote $(wc -c </tmp/dne/raster_canvas_hawk) B to /tmp/dne/raster_canvas_hawk"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'raster_canvas_hawk'
+  Ship_Service4:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore build cache
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  profile_service:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Never mirror the stale snapshots on fridays
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; echo yes && echo 'task 1 of 3'; true ; } > /tmp/dne/02f5ba8931618ff53be7baf475de6138a1
+            echo "...wrote $(wc -c </tmp/dne/02f5ba8931618ff53be7baf475de6138a1) B to /tmp/dne/02f5ba8931618ff53be7baf475de6138a1"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - '02f5ba8931618ff53be7baf475de6138a1'
+  canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  ppPotion:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Image the assay plate quietly
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; sort /etc/os-release | head -20; true ; } > /tmp/dne/TXN63426
+            echo "...wrote $(wc -c </tmp/dne/TXN63426) B to /tmp/dne/TXN63426"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'TXN63426'
+  rm-edge-hang:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Stage inputs
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+  wrapper-clamp:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: flagging purchase orders as we go
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; for c in $(seq 1 10); do echo $((c * c)); done | head -n 3; true ; } > /tmp/dne/RavenModuleSilent
+            echo "...wrote $(wc -c </tmp/dne/RavenModuleSilent) B to /tmp/dne/RavenModuleSilent"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'RavenModuleSilent'
+  build-nightly-test-matrix:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Weigh handoff
+          command: |
+            cat /tmp/dne/PXL00094833 2>/dev/null | tr -s '[:space:]' ' ' | wc -w || true
+      - run:
+          name: Fetch repo
+          command: git clone --depth 2 --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack bundle
+          command: bzcat resources-spare.tar.bz2 | tar xf -
+      - run:
+          command: taskset -c 0-3 ./lock-nightly
+
+  interceptors_by_id:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Build @ T4
+          command: |
+            mkdir -p /tmp/dne
+            set +o pipefail 2>/dev/null; printf '0x%X\n' $(seq 1 5000) > /tmp/dne/tEnAnTSIlentvAUlt; true
+            echo "...wrote $(wc -c </tmp/dne/tEnAnTSIlentvAUlt) B to /tmp/dne/tEnAnTSIlentvAUlt"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'tEnAnTSIlentvAUlt'
+  namespaceStr:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: 23 mix
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; env -0 | tr '\0' '\n' | awk -F= '{print $1}' | nl; true ; } > /tmp/dne/882e738e5868b81b3e8ae997c01b8260066bf4
+            echo "...wrote $(wc -c </tmp/dne/882e738e5868b81b3e8ae997c01b8260066bf4) B to /tmp/dne/882e738e5868b81b3e8ae997c01b8260066bf4"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - '882e738e5868b81b3e8ae997c01b8260066bf4'
+  trollAi:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Divert to the integration suite
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; ls -rp /usr/share/*/ | awk 'NR % 3 == 0'; true ; } > /tmp/dne/ec3087f4-4fbd
+            echo "...wrote $(wc -c </tmp/dne/ec3087f4-4fbd) B to /tmp/dne/ec3087f4-4fbd"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'ec3087f4-4fbd'
+  SLOT_VERSION:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Ping Size Medium
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; f=${TMPDIR:-/tmp}/back.bak; seq 5 > "$f"; while read -r n; do echo $((n * n)); done < "$f"; true ; } > /tmp/dne/ORD78670
+            echo "...wrote $(wc -c </tmp/dne/ORD78670) B to /tmp/dne/ORD78670"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'ORD78670'
+  m_classBtn:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Lap eight
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; numfmt --to=iec --padding=10 443791; true ; } > /tmp/dne/socket_market_flame_buffer
+            echo "...wrote $(wc -c </tmp/dne/socket_market_flame_buffer) B to /tmp/dne/socket_market_flame_buffer"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'socket_market_flame_buffer'
+  by4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Never mind renewal
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; getent passwd | sed 's/:.*//' | awk '{print length, $0}' | wc -w; true ; } > /tmp/dne/lvxav7dKa6Gm
+            echo "...wrote $(wc -c </tmp/dne/lvxav7dKa6Gm) B to /tmp/dne/lvxav7dKa6Gm"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'lvxav7dKa6Gm'
+  advance_invoice_fails:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: P1
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; : >'/tmp/agreement-offer.dat' && ls -l '/tmp/agreement-offer.dat'; true ; } > /tmp/dne/bxopj4o9fu
+            echo "...wrote $(wc -c </tmp/dne/bxopj4o9fu) B to /tmp/dne/bxopj4o9fu"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'bxopj4o9fu'
+  start7:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Brakes set
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; cat <(echo hi) <(date +%F); true ; } > /tmp/dne/GARDEN_COBALT
+            echo "...wrote $(wc -c </tmp/dne/GARDEN_COBALT) B to /tmp/dne/GARDEN_COBALT"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'GARDEN_COBALT'
+  succesful:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: approving payroll batch now
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; head -n3 /etc/os-release|cut -d "=" -f 2-|tr -s ' '; true ; } > /tmp/dne/pay10adn1cke1
+            echo "...wrote $(wc -c </tmp/dne/pay10adn1cke1) B to /tmp/dne/pay10adn1cke1"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'pay10adn1cke1'
+  sgdSGDGlyph:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dne
+      - run:
+          name: Mirror the DHCP leases across to east
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; touch '/tmp/d-old.out' && chmod a+r '/tmp/d-old.out' && stat -c '%a %n' '/tmp/d-old.out'; true ; } > /tmp/dne/PO_097760
+            echo "...wrote $(wc -c </tmp/dne/PO_097760) B to /tmp/dne/PO_097760"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'PO_097760'
+  globeish:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Build @ T4
+          command: |
+            mkdir -p /tmp/dne
+            { set +o pipefail 2>/dev/null; ls /usr/share | nl | fold -w 30; true ; } > /tmp/dne/crc_6d452cc55475
+            echo "...wrote $(wc -c </tmp/dne/crc_6d452cc55475) B to /tmp/dne/crc_6d452cc55475"
+      - persist_to_workspace:
+          root: /tmp/dne
+          paths:
+            - 'crc_6d452cc55475'
+workflows:
+  release:
+    jobs:
+      - TabBuilder
+      - ConvertTo-OffsetPixel
+      - verify-production-artifact-bundle:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - wip-router-reload:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - VerifyTests:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - auh-check:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - canary:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - rm-edge-hang:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - assemble-staging-test-matrix:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - build-nightly-test-matrix:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - ken-run:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - PROD_RUN_3:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - Ship_Service4:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - brodcast:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - py311-lint:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - VerifySuite:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - q1-rev:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - cd-v2:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - all-greens:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - bug-2124:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - mike-7:
+          requires:
+            - TabBuilder
+            - ConvertTo-OffsetPixel
+      - device_unlock_eager
+      - interceptors_by_id:
+          requires:
+            - device_unlock_eager
+      - Package_Staging9:
+          requires:
+            - interceptors_by_id
+      - param_check:
+          requires:
+            - interceptors_by_id
+      - namespaceStr:
+          requires:
+            - param_check
+      - ensure-end-to-end-artifact-bundle:
+          requires:
+            - namespaceStr
+      - was_default:
+          requires:
+            - namespaceStr
+      - trollAi:
+          requires:
+            - was_default
+      - fx-v2:
+          requires:
+            - trollAi
+      - task-button-finish:
+          requires:
+            - trollAi
+      - SLOT_VERSION:
+          requires:
+            - task-button-finish
+      - rm-queue-reload:
+          requires:
+            - SLOT_VERSION
+      - prin7:
+          requires:
+            - SLOT_VERSION
+      - m_classBtn:
+          requires:
+            - prin7
+      - py310-vet:
+          requires:
+            - m_classBtn
+      - mikeSage:
+          requires:
+            - m_classBtn
+      - by4:
+          requires:
+            - mikeSage
+      - verify-full-artifact-bundle:
+          requires:
+            - by4
+      - fE:
+          requires:
+            - by4
+      - advance_invoice_fails:
+          requires:
+            - fE
+      - build-partial-docker-image:
+          requires:
+            - advance_invoice_fails
+      - t_hat:
+          requires:
+            - advance_invoice_fails
+      - start7:
+          requires:
+            - t_hat
+      - v1-preview:
+          requires:
+            - start7
+      - FlagScannerMidPipe:
+          requires:
+            - start7
+      - succesful:
+          requires:
+            - FlagScannerMidPipe
+      - release:
+          requires:
+            - succesful
+      - saveRPC:
+          requires:
+            - succesful
+      - sgdSGDGlyph:
+          requires:
+            - saveRPC
+      - Run_Release2:
+          requires:
+            - sgdSGDGlyph
+      - fuse_zulu:
+          requires:
+            - sgdSGDGlyph
+      - globeish:
+          requires:
+            - fuse_zulu
+      - wip-metrics:
+          requires:
+            - globeish
